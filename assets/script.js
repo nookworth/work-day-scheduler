@@ -12,12 +12,14 @@
 
 var saveButtons = document.getElementsByClassName("btn");
 var hourBlocks = document.getElementsByClassName("hour");
-var inputBlocks = document.getElementsByClassName("input-group");
+var inputBlocks = document.getElementsByClassName("form-control");
+
 var time = moment();
-console.log(time);
 
 var scheduledEvent = "";
 var hour = "";
+
+var momentConversions = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 
 setInterval(getDate, 1000);
 
@@ -30,16 +32,26 @@ function colorSetter() {
   for (i = 0; i < hourBlocks.length; i++) {
     //get current time from hour block and convert to moment
     //convert "9 AM" to a moment????
-    var currentHour = hourBlocks[i].textContent;
-    var momentString = time.hour(currentHour);
+    var currentHour = momentConversions[i];
+    console.log(currentHour);
+    var momentString = moment().hour(currentHour);
+    console.log(momentString.toString());
 
-    if (moment(momentString).isSame(time)) {
-      inputBlocks[i].setAttribute("class", "present");
-    } else if (moment(momentString).isBefore(time)) {
+    if (moment.max(time, momentString) === time) {
       inputBlocks[i].setAttribute("class", "past");
-    } else {
+    } else if (moment.max(time, momentString) === momentString) {
       inputBlocks[i].setAttribute("class", "future");
+    } else {
+      inputBlocks[i].setAttribute("class", "present");
     }
+
+    // if (moment(momentString).isSame(time)) {
+    //   // inputBlocks[i].setAttribute("class", "present");
+    // } else if (moment(momentString).isBefore(time)) {
+    //   inputBlocks[i].setAttribute("class", "past");
+    // } else if (moment(momentString).isAfter(time)) {
+    //   inputBlocks[i].setAttribute("class", "future");
+    // }
   }
 }
 
