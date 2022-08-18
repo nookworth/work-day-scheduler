@@ -11,6 +11,10 @@
 // var saveButton9 = document.getElementById("btn9");
 
 var saveButtons = document.getElementsByClassName("btn");
+var hourBlocks = document.getElementsByClassName("hour");
+var inputBlocks = document.getElementsByClassName("input-group");
+var time = moment();
+console.log(time);
 
 var scheduledEvent = "";
 var hour = "";
@@ -18,14 +22,26 @@ var hour = "";
 setInterval(getDate, 1000);
 
 function getDate() {
-  var date = moment().format("dddd, MMMM Mo");
+  var date = moment().format("dddd, MMMM Do");
   $("#currentDay").text(date);
 }
 
-// function colorSetter() {
-//   var time = moment().format("hh");
-//   console.log(time);
-// }
+function colorSetter() {
+  for (i = 0; i < hourBlocks.length; i++) {
+    //get current time from hour block and convert to moment
+    //convert "9 AM" to a moment????
+    var currentHour = hourBlocks[i].textContent;
+    var momentString = time.hour(currentHour);
+
+    if (moment(momentString).isSame(time)) {
+      inputBlocks[i].setAttribute("class", "present");
+    } else if (moment(momentString).isBefore(time)) {
+      inputBlocks[i].setAttribute("class", "past");
+    } else {
+      inputBlocks[i].setAttribute("class", "future");
+    }
+  }
+}
 
 // colorSetter();
 
@@ -52,3 +68,5 @@ function saveEvent(event) {
 for (i = 0; i < saveButtons.length; i++) {
   saveButtons[i].addEventListener("click", saveEvent);
 }
+
+colorSetter();
