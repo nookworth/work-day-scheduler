@@ -9,10 +9,11 @@
 // var saveButton7 = document.getElementById("btn7");
 // var saveButton8 = document.getElementById("btn8");
 // var saveButton9 = document.getElementById("btn9");
-
+var rows = document.getElementsByClassName("row");
 var saveButtons = document.getElementsByClassName("btn");
 var hourBlocks = document.getElementsByClassName("hour");
 var inputBlocks = document.getElementsByClassName("form-control");
+var inputContainers = document.getElementsByClassName("input-group");
 
 var time = moment();
 
@@ -31,15 +32,14 @@ function getDate() {
 function colorSetter() {
   for (i = 0; i < hourBlocks.length; i++) {
     //get current time from hour block and convert to moment
-    //convert "9 AM" to a moment????
-    var currentHour = momentConversions[i];
-    console.log(currentHour);
-    var momentString = moment().hour(currentHour);
-    console.log(momentString.toString());
+    var scheduleText = hourBlocks[i].textContent.split(" ");
+    var scheduleHour = scheduleText[0];
+    var realHour = moment().format("H");
+    var momentString = moment().hour(scheduleHour);
 
-    if (moment.max(time, momentString) === time) {
+    if (moment.max(momentString, realHour) === realHour) {
       inputBlocks[i].setAttribute("class", "past");
-    } else if (moment.max(time, momentString) === momentString) {
+    } else if (moment.max(momentString, realHour) === momentString) {
       inputBlocks[i].setAttribute("class", "future");
     } else {
       inputBlocks[i].setAttribute("class", "present");
@@ -59,8 +59,15 @@ function colorSetter() {
 
 function saveEvent(event) {
   //retrieve user-inputted text from the correct row
-  scheduledEvent = event.target.parentElement;
-  hour = event.target.parentElement;
+  buttonClicked = event.target;
+  for (i = 0; i < saveButtons.length; i++) {
+    if (saveButtons[i] === buttonClicked) {
+      hour = hourBlocks[i].textContent;
+      scheduledEvent = inputBlocks[i].value;
+    }
+  }
+
+  console.log(scheduledEvent);
 
   //text in corresponding field to local storage
   localStorage.setItem(hour, scheduledEvent);
