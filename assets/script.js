@@ -23,6 +23,7 @@ var hour = "";
 var momentConversions = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 
 setInterval(getDate, 1000);
+setInterval(colorSetter, 1000);
 
 function getDate() {
   var date = moment().format("dddd, MMMM Do");
@@ -30,28 +31,20 @@ function getDate() {
 }
 
 function colorSetter() {
-  for (i = 0; i < hourBlocks.length; i++) {
+  for (let i = 0; i < hourBlocks.length; i++) {
     //get current time from hour block and convert to moment
-    var scheduleText = hourBlocks[i].textContent.split(" ");
-    var scheduleHour = scheduleText[0];
-    var realHour = moment().format("H");
-    var momentString = moment().hour(scheduleHour);
+    let scheduleText = hourBlocks[i].textContent.split(" ");
+    let scheduleHour = scheduleText[0];
+    let realHour = moment().format("H");
+    let scheduleMoment = moment().hour(scheduleHour);
 
-    if (moment.max(momentString, realHour) === realHour) {
-      inputBlocks[i].setAttribute("class", "past");
-    } else if (moment.max(momentString, realHour) === momentString) {
-      inputBlocks[i].setAttribute("class", "future");
-    } else {
+    if (moment().isSame(moment().hour(scheduleHour), "hour")) {
       inputBlocks[i].setAttribute("class", "present");
+    } else if (moment().isAfter(moment().hour(scheduleHour), "hour")) {
+      inputBlocks[i].setAttribute("class", "past");
+    } else if (moment().isBefore(moment().hour(scheduleHour), "hour")) {
+      inputBlocks[i].setAttribute("class", "future");
     }
-
-    // if (moment(momentString).isSame(time)) {
-    //   // inputBlocks[i].setAttribute("class", "present");
-    // } else if (moment(momentString).isBefore(time)) {
-    //   inputBlocks[i].setAttribute("class", "past");
-    // } else if (moment(momentString).isAfter(time)) {
-    //   inputBlocks[i].setAttribute("class", "future");
-    // }
   }
 }
 
@@ -84,8 +77,6 @@ function saveEvent(event) {
 // saveButton8.addEventListener("click", saveEvent());
 // saveButton9.addEventListener("click", saveEvent());
 
-for (i = 0; i < saveButtons.length; i++) {
+for (let i = 0; i < saveButtons.length; i++) {
   saveButtons[i].addEventListener("click", saveEvent);
 }
-
-colorSetter();
